@@ -161,11 +161,11 @@ const player = new Fighter({
     color: '#00d2ff',
     imageSrc: 'assets/striker_idle.png',
     framesMax: 4,
-    scale: 2.5,
-    offset: { x: 130, y: 155 },
+    scale: 1.5,
+    offset: { x: 20, y: 40 },
     name: 'Striker',
     characterType: 'STRIKER',
-    attackBox: { offset: { x: 50, y: 30 }, width: 120, height: 50 }
+    attackBox: { offset: { x: 50, y: 30 }, width: 100, height: 50 }
 });
 
 const enemy = new Fighter({
@@ -174,11 +174,11 @@ const enemy = new Fighter({
     color: '#ff3366',
     imageSrc: 'assets/titan_idle.png',
     framesMax: 4,
-    scale: 2.5,
-    offset: { x: 215, y: 320 },
+    scale: 1.5,
+    offset: { x: 20, y: 40 },
     name: 'Titan',
     characterType: 'TITAN',
-    attackBox: { offset: { x: -110, y: 30 }, width: 120, height: 50 }
+    attackBox: { offset: { x: -90, y: 30 }, width: 100, height: 50 }
 });
 
 const keys = {
