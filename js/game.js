@@ -7,49 +7,17 @@ canvas.height = 720;
 const gravity = 0.7;
 
 class Sprite {
-    constructor({ position, imageSrc, scale = 1, framesMax = 1, offset = { x: 0, y: 0 } }) {
+    constructor({ position, color = 'red' }) {
         this.position = position;
         this.width = 50;
         this.height = 150;
-        this.image = new Image();
-        this.image.src = imageSrc;
-        this.scale = scale;
-        this.framesMax = framesMax;
-        this.framesCurrent = 0;
-        this.framesElapsed = 0;
-        this.framesHold = 5;
-        this.offset = offset;
+        this.color = color;
     }
-
     draw() {
-        ctx.drawImage(
-            this.image,
-            this.framesCurrent * (this.image.width / this.framesMax),
-            0,
-            this.image.width / this.framesMax,
-            this.image.height,
-            this.position.x - this.offset.x,
-            this.position.y - this.offset.y,
-            (this.image.width / this.framesMax) * this.scale,
-            this.image.height * this.scale
-        );
+        ctx.fillStyle = this.color;
+        ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
     }
-
-    animateFrames() {
-        this.framesElapsed++;
-        if (this.framesElapsed % this.framesHold === 0) {
-            if (this.framesCurrent < this.framesMax - 1) {
-                this.framesCurrent++;
-            } else {
-                this.framesCurrent = 0;
-            }
-        }
-    }
-
-    update() {
-        this.draw();
-        this.animateFrames();
-    }
+    update() { this.draw(); }
 }
 
 class Background {
@@ -79,16 +47,12 @@ class Fighter extends Sprite {
         position,
         velocity,
         color,
-        imageSrc,
-        scale = 1,
-        framesMax = 1,
-        offset = { x: 0, y: 0 },
         name,
         keys,
         attackBox = { offset: {}, width: undefined, height: undefined },
         characterType = 'STRIKER'
     }) {
-        super({ position, imageSrc, scale, framesMax, offset });
+        super({ position, color });
         this.velocity = velocity;
         this.width = 60;
         this.height = 150;
@@ -101,7 +65,6 @@ class Fighter extends Sprite {
         };
         this.isAttacking = false;
         this.health = 100;
-        this.color = color;
         this.name = name;
         this.keys = keys;
         this.characterType = characterType;
@@ -110,17 +73,13 @@ class Fighter extends Sprite {
     }
 
     draw() {
-        // Redução de opacidade se estiver defendendo
-        ctx.save();
-        if (this.isDefending) ctx.globalAlpha = 0.6;
+        // Personagem
+        ctx.fillStyle = this.isDefending ? '#555' : this.color;
+        ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
 
-        super.draw();
-
-        ctx.restore();
-
-        // Barra de visualização de ataque (opcional, deixar desativado ou sutil)
+        // Barra de visualização de ataque (debug/efeito)
         if (this.isAttacking) {
-            ctx.fillStyle = this.characterType === 'STRIKER' ? 'rgba(0, 210, 255, 0.3)' : 'rgba(255, 51, 102, 0.3)';
+            ctx.fillStyle = this.characterType === 'STRIKER' ? 'rgba(0, 210, 255, 0.5)' : 'rgba(255, 51, 102, 0.5)';
             ctx.fillRect(
                 this.attackBox.position.x,
                 this.attackBox.position.y,
@@ -159,26 +118,18 @@ const player = new Fighter({
     position: { x: 200, y: 0 },
     velocity: { x: 0, y: 0 },
     color: '#00d2ff',
-    imageSrc: 'assets/striker_idle.png',
-    framesMax: 4,
-    scale: 1.5,
-    offset: { x: 20, y: 40 },
     name: 'Striker',
     characterType: 'STRIKER',
-    attackBox: { offset: { x: 50, y: 30 }, width: 100, height: 50 }
+    attackBox: { offset: { x: 50, y: 30 }, width: 120, height: 50 }
 });
 
 const enemy = new Fighter({
     position: { x: 1000, y: 0 },
     velocity: { x: 0, y: 0 },
     color: '#ff3366',
-    imageSrc: 'assets/titan_idle.png',
-    framesMax: 4,
-    scale: 1.5,
-    offset: { x: 20, y: 40 },
     name: 'Titan',
     characterType: 'TITAN',
-    attackBox: { offset: { x: -90, y: 30 }, width: 100, height: 50 }
+    attackBox: { offset: { x: -110, y: 30 }, width: 120, height: 50 }
 });
 
 const keys = {
