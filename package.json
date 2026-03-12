@@ -1,0 +1,12 @@
+{
+  "name": "game-trull",
+  "version": "1.0.0",
+  "description": "2D Fighting Game - GAME TRULL",
+  "main": "js/game.js",
+  "scripts": {
+    "start": "npx serve ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
