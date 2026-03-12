@@ -180,6 +180,8 @@ function determineWinner({ player, enemy, timerId }) {
         updateWinMarkers();
     }
 
+    if (window.gameAudio) window.gameAudio.playWin();
+
     if (p1Wins === 2 || p2Wins === 2) {
         text.innerText = p1Wins === 2 ? 'STRIKER IS CHAMPION!' : 'TITAN IS CHAMPION!';
         setTimeout(() => location.reload(), 3000);
@@ -268,6 +270,7 @@ function animate() {
             enemy.health -= 10;
             document.querySelector('#p2-hp').style.width = enemy.health + '%';
             screenShake();
+            if (window.gameAudio) window.gameAudio.playHit();
         }
     }
 
@@ -278,6 +281,7 @@ function animate() {
             player.health -= 10;
             document.querySelector('#p1-hp').style.width = player.health + '%';
             screenShake();
+            if (window.gameAudio) window.gameAudio.playHit();
         }
     }
 
@@ -319,5 +323,6 @@ window.addEventListener('keyup', (event) => {
 document.querySelector('#start-btn').addEventListener('click', () => {
     document.querySelector('#menu-screen').classList.add('hidden');
     document.querySelector('#hud').classList.remove('hidden');
+    if (window.gameAudio) window.gameAudio.start();
     startCountDown();
 });
