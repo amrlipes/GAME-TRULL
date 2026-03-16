@@ -289,6 +289,51 @@ function animate() {
     if (gameActive && (enemy.health <= 0 || player.health <= 0)) {
         determineWinner({ player, enemy });
     }
+
+    // Limites da tela simples
+    if (player.position.x < 0) player.position.x = 0;
+    if (player.position.x + player.width > canvas.width) player.position.x = canvas.width - player.width;
+    if (enemy.position.x < 0) enemy.position.x = 0;
+    if (enemy.position.x + enemy.width > canvas.width) enemy.position.x = canvas.width - enemy.width;
+
+    // Colisão de corpo (evitar que se atravessem)
+    for (let i = 0; i < 2; i++) {
+        const isYColliding = player.position.y + player.height >= enemy.position.y &&
+                             player.position.y <= enemy.position.y + enemy.height;
+        if (isYColliding) {
+            const p1Center = player.position.x + player.width / 2;
+            const p2Center = enemy.position.x + enemy.width / 2;
+            const distance = Math.abs(p1Center - p2Center);
+            const minDistance = (player.width + enemy.width) / 2;
+
+            if (distance < minDistance) {
+                const overlap = minDistance - distance;
+                let pushP1 = true;
+                let pushP2 = true;
+                
+                if (player.position.x <= 0 || player.position.x + player.width >= canvas.width) pushP1 = false;
+                if (enemy.position.x <= 0 || enemy.position.x + enemy.width >= canvas.width) pushP2 = false;
+
+                if (p1Center < p2Center || (p1Center === p2Center && player.position.x <= enemy.position.x)) {
+                    if (pushP1 && pushP2) { player.position.x -= overlap / 2; enemy.position.x += overlap / 2; }
+                    else if (pushP1 && !pushP2) { player.position.x -= overlap; }
+                    else if (!pushP1 && pushP2) { enemy.position.x += overlap; }
+                    else { enemy.position.x += overlap; } 
+                } else {
+                    if (pushP1 && pushP2) { player.position.x += overlap / 2; enemy.position.x -= overlap / 2; }
+                    else if (pushP1 && !pushP2) { player.position.x += overlap; }
+                    else if (!pushP1 && pushP2) { enemy.position.x -= overlap; }
+                    else { player.position.x += overlap; } 
+                }
+            }
+        }
+        
+        // Re-aplica limites
+        if (player.position.x < 0) player.position.x = 0;
+        if (player.position.x + player.width > canvas.width) player.position.x = canvas.width - player.width;
+        if (enemy.position.x < 0) enemy.position.x = 0;
+        if (enemy.position.x + enemy.width > canvas.width) enemy.position.x = canvas.width - enemy.width;
+    }
 }
 
 animate();
