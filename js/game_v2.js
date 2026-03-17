@@ -297,7 +297,7 @@ function animate() {
     if (gameActive && player.isAttacking && rectangularCollision({ rectangle1: player, rectangle2: enemy })) {
         player.isAttacking = false;
         if (!enemy.isDefending) {
-            enemy.health -= 10;
+            enemy.health -= 5;
             document.querySelector('#p2-hp').style.width = enemy.health + '%';
             screenShake();
             if (window.gameAudio) window.gameAudio.playHit();
@@ -308,7 +308,7 @@ function animate() {
     if (gameActive && enemy.isAttacking && rectangularCollision({ rectangle1: enemy, rectangle2: player })) {
         enemy.isAttacking = false;
         if (!player.isDefending) {
-            player.health -= 10;
+            player.health -= 5;
             document.querySelector('#p1-hp').style.width = player.health + '%';
             screenShake();
             if (window.gameAudio) window.gameAudio.playHit();
