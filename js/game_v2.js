@@ -369,6 +369,9 @@ function animate() {
 animate();
 
 window.addEventListener('keydown', (event) => {
+    // Ignora eventos gerados por "segurar a tecla"
+    if (event.repeat) return;
+
     if (!gameActive && event.key !== ' ') return;
 
     switch (event.key) {
