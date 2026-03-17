@@ -80,6 +80,45 @@ body {
     margin-bottom: 3rem;
 }
 
+.controls-info {
+    display: flex;
+    gap: 3rem;
+    margin-bottom: 3rem;
+    background: var(--glass-bg);
+    padding: 1.5rem 3rem;
+    border-radius: 10px;
+    border: 1px solid var(--border-glass);
+    backdrop-filter: blur(5px);
+}
+
+.player-controls h3 {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.p1-controls h3 { color: var(--primary-blue); }
+.p2-controls h3 { color: var(--primary-red); }
+
+.player-controls p {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.player-controls span {
+    background: rgba(255,255,255,0.2);
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-family: monospace;
+    font-weight: bold;
+    border: 1px solid rgba(255,255,255,0.4);
+}
+
 #start-btn {
     padding: 1.2rem 3rem;
     font-family: 'Press Start 2P', cursive;
