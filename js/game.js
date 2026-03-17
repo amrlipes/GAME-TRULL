@@ -233,6 +233,15 @@ function animate() {
     ctx.fillStyle = 'rgba(0,0,0,0.1)';
     ctx.fillRect(0, canvas.height - 100, canvas.width, 100);
 
+    // Atualizar direção dos ataques com base na posição (para baterem para o lado contrário caso troquem de lado)
+    if (player.position.x <= enemy.position.x) {
+        player.attackBox.offset.x = 50;
+        enemy.attackBox.offset.x = -110;
+    } else {
+        player.attackBox.offset.x = -110;
+        enemy.attackBox.offset.x = 50;
+    }
+
     player.update();
     enemy.update();
 
