@@ -156,6 +156,20 @@ let round = 1;
 let gameActive = false;
 let p1Wins = 0;
 let p2Wins = 0;
+let timer = 99;
+let timerId;
+
+function decreaseTimer() {
+    if (timer > 0) {
+        timerId = setTimeout(decreaseTimer, 1000);
+        timer--;
+        document.querySelector('#round-timer').innerText = timer;
+    }
+
+    if (timer === 0) {
+        determineWinner({ player, enemy, timerId });
+    }
+}
 
 function screenShake() {
     document.querySelector('#game-ui').classList.add('shake');
@@ -165,6 +179,7 @@ function screenShake() {
 }
 
 function determineWinner({ player, enemy, timerId }) {
+    clearTimeout(timerId);
     gameActive = false;
     const announcer = document.querySelector('#game-announcer');
     const text = document.querySelector('#announcer-text');
@@ -214,6 +229,8 @@ function resetPositions() {
     document.querySelector('#p2-hp').style.width = '100%';
     player.position = { x: 200, y: 0 };
     enemy.position = { x: 1000, y: 0 };
+    timer = 99;
+    document.querySelector('#round-timer').innerText = timer;
 }
 
 function startCountDown() {
@@ -224,6 +241,7 @@ function startCountDown() {
     setTimeout(() => {
         announcer.classList.add('hidden');
         gameActive = true;
+        decreaseTimer();
     }, 1000);
 }
 
@@ -298,7 +316,7 @@ function animate() {
 
     // Condição de fim de round
     if (gameActive && (enemy.health <= 0 || player.health <= 0)) {
-        determineWinner({ player, enemy });
+        determineWinner({ player, enemy, timerId });
     }
 
     // Limites da tela simples
