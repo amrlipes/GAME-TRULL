@@ -90,10 +90,6 @@ class Fighter extends Sprite {
     }
 
     update() {
-        this.draw();
-        this.attackBox.position.x = this.position.x + this.attackBox.offset.x;
-        this.attackBox.position.y = this.position.y + this.attackBox.offset.y;
-
         this.position.x += this.velocity.x;
         this.position.y += this.velocity.y;
 
@@ -104,6 +100,12 @@ class Fighter extends Sprite {
         } else {
             this.velocity.y += gravity;
         }
+
+        // Atualizar a posição real da caixa de ataque ANTES de desenhar
+        this.attackBox.position.x = this.position.x + this.attackBox.offset.x;
+        this.attackBox.position.y = this.position.y + this.attackBox.offset.y;
+
+        this.draw();
     }
 
     attack() {
