@@ -115,6 +115,13 @@ class Fighter extends Sprite {
                 ctx.translate(-centerX, 0);
             }
 
+            // Animação de Morte (Cair no chão pra trás)
+            if (this.health <= 0) {
+                ctx.translate(this.position.x, this.position.y + this.height);
+                ctx.rotate(-Math.PI / 2); // Rotação de -90 graus pros pés ficarem de eixo
+                ctx.translate(-this.position.x, -(this.position.y + this.height));
+            }
+
             let punchOffsetX = 0;
             // Animação procedural de soco (Lunge pra frente)
             if (this.isAttacking) {
@@ -138,12 +145,19 @@ class Fighter extends Sprite {
             );
             ctx.restore();
         } else {
+            ctx.save();
+            if (this.health <= 0) {
+                ctx.translate(this.position.x, this.position.y + this.height);
+                ctx.rotate(-Math.PI / 2);
+                ctx.translate(-this.position.x, -(this.position.y + this.height));
+            }
             ctx.fillStyle = this.isDefending ? '#555' : this.color;
             ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+            ctx.restore();
         }
 
         // Efeito de visualização da hitbox do ataque (opcional, só rastro pra impacto)
-        if (this.isAttacking) {
+        if (this.isAttacking && this.health > 0) {
             ctx.fillStyle = this.characterType === 'STRIKER' ? 'rgba(0, 210, 255, 0.4)' : 'rgba(255, 51, 102, 0.4)';
             ctx.fillRect(
                 this.attackBox.position.x,
@@ -365,27 +379,31 @@ function animate() {
 
     // Movimentação P1
     player.isDefending = false;
-    if (keys.a.pressed && player.lastKey === 'a') {
-        player.velocity.x = -5;
-    } else if (keys.d.pressed && player.lastKey === 'd') {
-        player.velocity.x = 5;
+    if (gameActive && player.health > 0) {
+        if (keys.a.pressed && player.lastKey === 'a') {
+            player.velocity.x = -5;
+        } else if (keys.d.pressed && player.lastKey === 'd') {
+            player.velocity.x = 5;
+        }
+        
+        // Defesa P1
+        if (player.position.x < enemy.position.x && keys.a.pressed) player.isDefending = true;
+        if (player.position.x > enemy.position.x && keys.d.pressed) player.isDefending = true;
     }
-
-    // Defesa P1 (Segurar para trás em relação ao inimigo)
-    if (player.position.x < enemy.position.x && keys.a.pressed) player.isDefending = true;
-    if (player.position.x > enemy.position.x && keys.d.pressed) player.isDefending = true;
 
     // Movimentação P2
     enemy.isDefending = false;
-    if (keys.ArrowLeft.pressed && enemy.lastKey === 'ArrowLeft') {
-        enemy.velocity.x = -5;
-    } else if (keys.ArrowRight.pressed && enemy.lastKey === 'ArrowRight') {
-        enemy.velocity.x = 5;
-    }
+    if (gameActive && enemy.health > 0) {
+        if (keys.ArrowLeft.pressed && enemy.lastKey === 'ArrowLeft') {
+            enemy.velocity.x = -5;
+        } else if (keys.ArrowRight.pressed && enemy.lastKey === 'ArrowRight') {
+            enemy.velocity.x = 5;
+        }
 
-    // Defesa P2 (Segurar para trás em relação ao player)
-    if (enemy.position.x < player.position.x && keys.ArrowLeft.pressed) enemy.isDefending = true;
-    if (enemy.position.x > player.position.x && keys.ArrowRight.pressed) enemy.isDefending = true;
+        // Defesa P2
+        if (enemy.position.x < player.position.x && keys.ArrowLeft.pressed) enemy.isDefending = true;
+        if (enemy.position.x > player.position.x && keys.ArrowRight.pressed) enemy.isDefending = true;
+    }
 
     // Detecção de Hit P1 -> P2
     if (gameActive && player.isAttacking && rectangularCollision({ rectangle1: player, rectangle2: enemy })) {
