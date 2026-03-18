@@ -179,6 +179,7 @@ const player = new Fighter({
     imageSrc: 'assets/striker_idle.png',
     framesCols: 4,
     framesRows: 2,
+    framesHold: 15,
     attackBox: { offset: { x: 50, y: 30 }, width: 120, height: 50 }
 });
 
