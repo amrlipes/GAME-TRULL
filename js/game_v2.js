@@ -73,6 +73,7 @@ class Fighter extends Sprite {
         this.characterType = characterType;
         this.isDefending = false;
         this.wins = 0;
+        this.isFacingRight = true;
 
         this.framesCols = framesCols;
         this.framesRows = framesRows;
@@ -98,6 +99,16 @@ class Fighter extends Sprite {
             const drawWidth = drawHeight * imageAspect;
             const offsetX = (this.width - drawWidth) / 2;
 
+            ctx.save();
+            
+            // Se o personagem deve virar para a esquerda:
+            if (!this.isFacingRight) {
+                const centerX = this.position.x + this.width / 2;
+                ctx.translate(centerX, 0);
+                ctx.scale(-1, 1);
+                ctx.translate(-centerX, 0);
+            }
+
             if (this.isDefending) ctx.filter = 'brightness(50%)';
             ctx.drawImage(
                 this.image,
@@ -110,7 +121,7 @@ class Fighter extends Sprite {
                 drawWidth,
                 drawHeight
             );
-            ctx.filter = 'none';
+            ctx.restore();
         } else {
             ctx.fillStyle = this.isDefending ? '#555' : this.color;
             ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
@@ -312,13 +323,17 @@ function animate() {
     ctx.fillStyle = 'rgba(0,0,0,0.1)';
     ctx.fillRect(0, canvas.height - 100, canvas.width, 100);
 
-    // Atualizar direção dos ataques com base na posição (para baterem para o lado contrário caso troquem de lado)
+    // Atualizar direção dog ataques e virar o personagem com base na posição
     if (player.position.x <= enemy.position.x) {
         player.attackBox.offset.x = 50;
         enemy.attackBox.offset.x = -110;
+        player.isFacingRight = true;
+        enemy.isFacingRight = false;
     } else {
         player.attackBox.offset.x = -110;
         enemy.attackBox.offset.x = 50;
+        player.isFacingRight = false;
+        enemy.isFacingRight = true;
     }
 
     player.update();
