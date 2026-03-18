@@ -49,6 +49,7 @@ class Fighter extends Sprite {
         color,
         name,
         keys,
+        imageSrc,
         attackBox = { offset: {}, width: undefined, height: undefined },
         characterType = 'STRIKER'
     }) {
@@ -70,12 +71,34 @@ class Fighter extends Sprite {
         this.characterType = characterType;
         this.isDefending = false;
         this.wins = 0;
+
+        if (imageSrc) {
+            this.image = new Image();
+            this.image.src = imageSrc;
+        }
     }
 
     draw() {
         // Personagem
-        ctx.fillStyle = this.isDefending ? '#555' : this.color;
-        ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+        if (this.image && this.image.complete) {
+            const imageAspect = this.image.width / this.image.height;
+            const drawHeight = this.height;
+            const drawWidth = drawHeight * imageAspect;
+            const offsetX = (this.width - drawWidth) / 2;
+
+            if (this.isDefending) ctx.filter = 'brightness(50%)';
+            ctx.drawImage(
+                this.image,
+                this.position.x + offsetX,
+                this.position.y,
+                drawWidth,
+                drawHeight
+            );
+            ctx.filter = 'none';
+        } else {
+            ctx.fillStyle = this.isDefending ? '#555' : this.color;
+            ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+        }
 
         // Barra de visualização de ataque (debug/efeito)
         if (this.isAttacking) {
@@ -122,6 +145,7 @@ const player = new Fighter({
     color: '#00d2ff',
     name: 'Striker',
     characterType: 'STRIKER',
+    imageSrc: 'assets/striker_avatar_cropped.png',
     attackBox: { offset: { x: 50, y: 30 }, width: 120, height: 50 }
 });
 
