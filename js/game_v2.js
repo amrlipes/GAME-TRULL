@@ -52,6 +52,9 @@ class Fighter extends Sprite {
         imageSrc,
         framesCols = 1,
         framesRows = 1,
+        framesHold = 5,
+        scale = 1,
+        imageOffset = { x: 0, y: 0 },
         attackBox = { offset: {}, width: undefined, height: undefined },
         characterType = 'STRIKER'
     }) {
@@ -80,7 +83,9 @@ class Fighter extends Sprite {
         this.framesCurrentCol = 0;
         this.framesCurrentRow = 0;
         this.framesElapsed = 0;
-        this.framesHold = 5;
+        this.framesHold = framesHold;
+        this.scale = scale;
+        this.imageOffset = imageOffset;
 
         if (imageSrc) {
             this.image = new Image();
@@ -95,9 +100,10 @@ class Fighter extends Sprite {
             const frameHeight = this.image.height / this.framesRows;
 
             const imageAspect = frameWidth / frameHeight;
-            const drawHeight = this.height;
+            const drawHeight = this.height * this.scale;
             const drawWidth = drawHeight * imageAspect;
-            const offsetX = (this.width - drawWidth) / 2;
+            const offsetX = (this.width - drawWidth) / 2 + this.imageOffset.x;
+            const offsetY = (this.height - drawHeight) + this.imageOffset.y;
 
             ctx.save();
             
@@ -117,7 +123,7 @@ class Fighter extends Sprite {
                 frameWidth,
                 frameHeight,
                 this.position.x + offsetX,
-                this.position.y,
+                this.position.y + offsetY,
                 drawWidth,
                 drawHeight
             );
@@ -204,6 +210,8 @@ const enemy = new Fighter({
     framesCols: 4,
     framesRows: 1,
     framesHold: 15,
+    scale: 4.0,
+    imageOffset: { x: 0, y: 232 },
     attackBox: { offset: { x: -110, y: 30 }, width: 120, height: 50 }
 });
 
