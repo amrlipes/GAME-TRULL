@@ -156,16 +156,7 @@ class Fighter extends Sprite {
             ctx.restore();
         }
 
-        // Efeito de visualização da hitbox do ataque (opcional, só rastro pra impacto)
-        if (this.isAttacking && this.health > 0) {
-            ctx.fillStyle = this.characterType === 'STRIKER' ? 'rgba(0, 210, 255, 0.4)' : 'rgba(255, 51, 102, 0.4)';
-            ctx.fillRect(
-                this.attackBox.position.x,
-                this.attackBox.position.y,
-                this.attackBox.width,
-                this.attackBox.height
-            );
-        }
+        // Efeito de visualização da hitbox do ataque foi removido a pedido do usuário
     }
 
     update() {
