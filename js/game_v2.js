@@ -115,6 +115,15 @@ class Fighter extends Sprite {
                 ctx.translate(-centerX, 0);
             }
 
+            let punchOffsetX = 0;
+            // Animação procedural de soco (Lunge pra frente)
+            if (this.isAttacking) {
+                punchOffsetX = 40; // Dá um "bote" de 40 pixels pra frente
+                ctx.translate(this.position.x + this.width/2, this.position.y + this.height);
+                ctx.rotate(15 * Math.PI / 180); // Inclina o corpo 15 graus pra frente
+                ctx.translate(-(this.position.x + this.width/2), -(this.position.y + this.height));
+            }
+
             if (this.isDefending) ctx.filter = 'brightness(50%)';
             ctx.drawImage(
                 this.image,
@@ -122,7 +131,7 @@ class Fighter extends Sprite {
                 this.framesCurrentRow * frameHeight,
                 frameWidth,
                 frameHeight,
-                this.position.x + offsetX,
+                this.position.x + offsetX + punchOffsetX,
                 this.position.y + offsetY,
                 drawWidth,
                 drawHeight
@@ -133,9 +142,9 @@ class Fighter extends Sprite {
             ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
         }
 
-        // Barra de visualização de ataque (debug/efeito)
+        // Efeito de visualização da hitbox do ataque (opcional, só rastro pra impacto)
         if (this.isAttacking) {
-            ctx.fillStyle = this.characterType === 'STRIKER' ? 'rgba(0, 210, 255, 0.5)' : 'rgba(255, 51, 102, 0.5)';
+            ctx.fillStyle = this.characterType === 'STRIKER' ? 'rgba(0, 210, 255, 0.4)' : 'rgba(255, 51, 102, 0.4)';
             ctx.fillRect(
                 this.attackBox.position.x,
                 this.attackBox.position.y,
