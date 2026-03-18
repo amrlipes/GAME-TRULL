@@ -202,7 +202,7 @@ const enemy = new Fighter({
     characterType: 'TITAN',
     imageSrc: 'assets/titan_idle.png',
     framesCols: 4,
-    framesRows: 2,
+    framesRows: 1,
     framesHold: 15,
     attackBox: { offset: { x: -110, y: 30 }, width: 120, height: 50 }
 });
