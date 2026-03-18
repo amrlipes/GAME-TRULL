@@ -50,6 +50,8 @@ class Fighter extends Sprite {
         name,
         keys,
         imageSrc,
+        framesCols = 1,
+        framesRows = 1,
         attackBox = { offset: {}, width: undefined, height: undefined },
         characterType = 'STRIKER'
     }) {
@@ -72,6 +74,13 @@ class Fighter extends Sprite {
         this.isDefending = false;
         this.wins = 0;
 
+        this.framesCols = framesCols;
+        this.framesRows = framesRows;
+        this.framesCurrentCol = 0;
+        this.framesCurrentRow = 0;
+        this.framesElapsed = 0;
+        this.framesHold = 5;
+
         if (imageSrc) {
             this.image = new Image();
             this.image.src = imageSrc;
@@ -81,7 +90,10 @@ class Fighter extends Sprite {
     draw() {
         // Personagem
         if (this.image && this.image.complete) {
-            const imageAspect = this.image.width / this.image.height;
+            const frameWidth = this.image.width / this.framesCols;
+            const frameHeight = this.image.height / this.framesRows;
+
+            const imageAspect = frameWidth / frameHeight;
             const drawHeight = this.height;
             const drawWidth = drawHeight * imageAspect;
             const offsetX = (this.width - drawWidth) / 2;
@@ -89,6 +101,10 @@ class Fighter extends Sprite {
             if (this.isDefending) ctx.filter = 'brightness(50%)';
             ctx.drawImage(
                 this.image,
+                this.framesCurrentCol * frameWidth,
+                this.framesCurrentRow * frameHeight,
+                frameWidth,
+                frameHeight,
                 this.position.x + offsetX,
                 this.position.y,
                 drawWidth,
@@ -129,6 +145,21 @@ class Fighter extends Sprite {
         this.attackBox.position.y = this.position.y + this.attackBox.offset.y;
 
         this.draw();
+
+        // Animação do Sprite
+        if (this.image && this.image.complete && (this.framesCols > 1 || this.framesRows > 1)) {
+            this.framesElapsed++;
+            if (this.framesElapsed % this.framesHold === 0) {
+                const totalFrames = this.framesCols * this.framesRows;
+                let linearFrame = this.framesCurrentRow * this.framesCols + this.framesCurrentCol;
+                linearFrame++;
+                if (linearFrame >= totalFrames) {
+                    linearFrame = 0;
+                }
+                this.framesCurrentRow = Math.floor(linearFrame / this.framesCols);
+                this.framesCurrentCol = linearFrame % this.framesCols;
+            }
+        }
     }
 
     attack() {
@@ -145,7 +176,9 @@ const player = new Fighter({
     color: '#00d2ff',
     name: 'Striker',
     characterType: 'STRIKER',
-    imageSrc: 'assets/striker_avatar_cropped.png',
+    imageSrc: 'assets/striker_idle.png',
+    framesCols: 4,
+    framesRows: 2,
     attackBox: { offset: { x: 50, y: 30 }, width: 120, height: 50 }
 });
 
